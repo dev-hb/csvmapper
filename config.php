@@ -6,6 +6,8 @@ ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_report
 const DATA_DIR = "data/";
 const OUTPUT_DIR = "output/";
 
+$SEPARATOR = ";";
+
 require_once 'autoload.php';
 
 

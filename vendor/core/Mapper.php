@@ -17,7 +17,7 @@ class Mapper {
     /**
      * @var string[]
      */
-    private $mapping_fields;
+    private $mapping_fields = [];
     /**
      * @var $output File
      */
@@ -28,10 +28,13 @@ class Mapper {
      * @param $handle
      * @param $source1
      * @param $source2
+     * @param $map
      */
     public function __construct($handle, $source1, $source2, $map)
     {
-        $this->mapping_fields = $map;
+        foreach ($map as $k=>$v){
+            $this->mapping_fields[CSVRecord::prettify($k)] = CSVRecord::prettify($v);
+        }
         $this->handle = $handle;
         $this->source1 = $source1;
         $this->source2 = $source2;

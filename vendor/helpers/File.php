@@ -33,14 +33,15 @@ class File {
      * @return File
      */
     public function parse(){
+        global $SEPARATOR;
         try{
             $content = explode(PHP_EOL, $this->getFileContent($this->filename));
-            $fields_raw = explode(";", $content[0]);
+            $fields_raw = explode($SEPARATOR, $content[0]);
             $this->fields = $fields_raw;
             unset($content[0]);
             foreach ($content as $row){
-                if(trim($row) != "" && count(explode(";", $row)) == count($fields_raw)){
-                    $this->content[] = (new CSVRecord())->createRecord($fields_raw, explode(";", $row));
+                if(trim($row) != "" && count(explode($SEPARATOR, $row)) == count($fields_raw)){
+                    $this->content[] = (new CSVRecord())->createRecord($fields_raw, explode($SEPARATOR, $row));
                 }
             }
         }catch (Exception $ex){
@@ -54,26 +55,28 @@ class File {
      * Save the parsed data as CSV file
      */
     public function save(){
+        global $SEPARATOR;
         $file = fopen($this->dir . $this->filename, "a+");
-        fputcsv($file, $this->fields, ";");
+        fputcsv($file, $this->fields, $SEPARATOR);
         var_dump(count($this->getContent()));
         foreach ($this->getContent() as $record){
             $values = [];
             foreach ($this->fields as $field){
                 $values[] = $record->{CSVRecord::prettify($field)};
             }
-            fputcsv($file, $values, ";");
+            fputcsv($file, $values, $SEPARATOR);
         }
         fclose($file);
+        return $this->filename;
     }
 
     /**
      * Get file content
      * @throws Exception
      */
-    public function getFileContent($filename){
-        if(! file_exists($this->dir . $filename)) throw new Exception();
-        return file_get_contents($this->dir . $filename);
+    public function getFileContent($filename = null){
+        if($filename == null) throw new Exception();
+        return file_get_contents($filename);
     }
 
     /**

@@ -43,7 +43,7 @@ class CSVRecord
      */
     public static function prettify($name){
         $attr = strtolower(str_replace(" ", "_", $name));
-        return str_replace("'", "", str_replace("\"", "", $attr));
+        return str_replace("'", "", str_replace("\"", "", str_replace("/", "-", $attr)));
     }
 
 
